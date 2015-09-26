@@ -4,7 +4,7 @@ library(dplyr)
 ## This function produce a datafile HumanActivityRecognitionUsingSmartphones.csv
 ## containing only means and standard deviations
 
-meansNstds <- function(){
+run_analysis1 <- function(){
 
   ## Get the field names out of features.txt
   feature <- fread("features.txt")
@@ -32,8 +32,8 @@ meansNstds <- function(){
   ## labels$V2 contains the activity names
   
   ## Each Subject
-  subject_test <- read.table("test/subject_test.txt", col.names = "id")
-  subject_train <- read.table("train/subject_train.txt", col.names = "id")
+  subject_test <- read.table("test/subject_test.txt", col.names = "subject")
+  subject_train <- read.table("train/subject_train.txt", col.names = "subject")
   
   ## nrow(unique(subject_train)) + nrow(unique(subject_test)) = 30
   ## It matches the number of participants
@@ -49,9 +49,17 @@ meansNstds <- function(){
   
   ## write the datatable AllSubjects to 
   ## HumanActivityRecognitionUsingSmartphones.csv
-  write.csv(AllSubjects, "HumanActivityRecognitionUsingSmartphones.csv")
+  write.csv(AllSubjects, "HumanActivityRecognitionUsingSmartphones.csv", row.names = FALSE)
 }
 
 ## Average of each variable for each activity and each subject
+## This results in a tidy dataset called "tidy.csv" with 180 rows and 81 columns
 
+run_analysis2 <- function() {
+  AllSubjects <- fread("HumanActivityRecognitionUsingSmartphones.csv") %>%
 
+    
+  byID <- aggregate(. ~ id + activity_id, FUN = mean, data = AllSubjects)
+  
+  write.csv(byID, "tidy.csv", row.names = FALSE)
+}
